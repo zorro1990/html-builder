@@ -1,10 +1,84 @@
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', function() {
+    // 密码验证相关元素
+    const authContainer = document.getElementById('authContainer');
+    const appContainer = document.getElementById('appContainer');
+    const passwordInput = document.getElementById('passwordInput');
+    const verifyBtn = document.getElementById('verifyBtn');
+    const authMessage = document.getElementById('authMessage');
+    
+    // HTML编辑器相关元素
     const htmlInput = document.getElementById('htmlInput');
     const previewFrame = document.getElementById('previewFrame');
-    const publishBtn = document.getElementById('publishBtn'); // Corrected ID
+    const publishBtn = document.getElementById('publishBtn');
     const publishedLinkContainer = document.getElementById('publishedLinkContainer');
     const publishedLink = document.getElementById('publishedLink');
     const publishedLinkInput = document.getElementById('publishedLinkInput');
+
+    // 检查本地存储中是否有验证状态
+    const isAuthenticated = localStorage.getItem('staticHtmlAuth') === 'true';
+    if (isAuthenticated) {
+        showApp();
+    }
+
+    // 密码验证功能
+    if (verifyBtn) {
+        verifyBtn.addEventListener('click', () => {
+            verifyPassword();
+        });
+    }
+
+    if (passwordInput) {
+        passwordInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                verifyPassword();
+            }
+        });
+    }
+
+    function verifyPassword() {
+        const password = passwordInput.value.trim();
+        if (!password) {
+            authMessage.textContent = '请输入密码';
+            return;
+        }
+
+        // 调用真实的API进行密码验证
+        verifyBtn.disabled = true;
+        verifyBtn.textContent = '验证中...';
+        authMessage.textContent = '';
+        
+        fetch('/api/verify-password', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ password })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                localStorage.setItem('staticHtmlAuth', 'true');
+                showApp();
+            } else {
+                authMessage.textContent = data.error || '密码错误，请重试';
+                passwordInput.value = '';
+                passwordInput.focus();
+            }
+        })
+        .catch(error => {
+            console.error('验证错误:', error);
+            authMessage.textContent = '网络错误，请重试';
+        })
+        .finally(() => {
+            verifyBtn.disabled = false;
+            verifyBtn.textContent = '验证';
+        });
+    }
+
+    function showApp() {
+        authContainer.style.display = 'none';
+        appContainer.style.display = 'block';
+    }
 
     // Function to update the preview iframe
     function updatePreview() {
@@ -26,41 +100,55 @@ document.addEventListener('DOMContentLoaded', () => {
         htmlInput.addEventListener('input', updatePreview);
     }
 
-    // Placeholder for publish functionality
-    if (publishBtn) { // Corrected variable name
+    // 修改发布功能
+    if (publishBtn) {
         publishBtn.addEventListener('click', () => {
             const rawHtml = htmlInput.value;
+            if (!rawHtml.trim()) {
+                alert('请输入HTML内容');
+                return;
+            }
+            
             if (typeof DOMPurify === 'undefined') {
                 alert('错误：DOMPurify 未加载，无法安全发布。');
                 return;
             }
+            
             const cleanHtmlToPublish = DOMPurify.sanitize(rawHtml);
-            console.log('Publish button clicked. Clean HTML to publish:', cleanHtmlToPublish);
-            // Simulate API call
+            
             publishBtn.disabled = true;
             publishBtn.textContent = '发布中...';
             publishedLinkContainer.style.display = 'none';
 
-            setTimeout(() => {
-                // Simulate a successful response
-                const uniqueId = Date.now().toString(36) + Math.random().toString(36).substring(2);
-                const fakeUrl = `https://your-publish-service.example.com/view/${uniqueId}`;
-
-                publishedLink.href = fakeUrl;
-                publishedLink.textContent = fakeUrl;
-                publishedLinkInput.value = fakeUrl;
-                publishedLinkContainer.style.display = 'block';
-
+            fetch('/api/publish-html', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ htmlContent: cleanHtmlToPublish })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    publishedLink.href = data.viewUrl;
+                    publishedLink.textContent = data.viewUrl;
+                    publishedLinkInput.value = data.viewUrl;
+                    publishedLinkContainer.style.display = 'block';
+                    alert('发布成功！');
+                } else {
+                    alert('发布失败：' + (data.error || '未知错误'));
+                }
+            })
+            .catch(error => {
+                console.error('发布错误:', error);
+                alert('发布失败：网络错误');
+            })
+            .finally(() => {
                 publishBtn.disabled = false;
                 publishBtn.textContent = '发布';
-                alert('模拟发布成功！链接已显示。');
-
-            }, 2000); // Simulate 2 seconds delay
+            });
         });
     }
-
-    // Initial preview update if there's any default content (optional)
-    // updatePreview(); 
 
     console.log('StaticHTML Publisher script loaded and initialized.');
     if (typeof DOMPurify !== 'undefined') {

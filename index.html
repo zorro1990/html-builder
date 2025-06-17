@@ -9,7 +9,23 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <main class="container">
+    <!-- 密码验证界面 -->
+    <div id="authContainer" class="container">
+        <header>
+            <h1>StaticHTML Publisher</h1>
+            <p>请输入访问密码</p>
+        </header>
+        <main>
+            <div class="auth-form">
+                <input type="password" id="passwordInput" placeholder="请输入密码...">
+                <button id="verifyBtn">验证</button>
+                <p id="authMessage" class="error-message"></p>
+            </div>
+        </main>
+    </div>
+
+    <!-- 主应用界面 (初始隐藏) -->
+    <main id="appContainer" class="container" style="display: none;">
         <header>
             <h1>StaticHTML Publisher</h1>
             <p>粘贴您的 HTML 代码，实时预览并一键发布。</p>
@@ -36,8 +52,8 @@
                 <input type="text" id="publishedLinkInput" readonly>
             </div>
         </footer>
-
     </main>
+    
     <!-- 引入 DOMPurify -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/dompurify/3.0.6/purify.min.js"></script> 
     <script src="script.js"></script>

@@ -1,0 +1,16 @@
+{
+  "name": "html-publisher",
+  "version": "1.0.0",
+  "description": "A simple HTML publisher with Vercel and GitHub",
+  "main": "index.html",
+  "scripts": {
+    "dev": "vercel dev",
+    "build": "echo 'No build step required'"
+  },
+  "dependencies": {
+    "@octokit/rest": "^19.0.0"
+  },
+  "engines": {
+    "node": ">=14"
+  }
+}

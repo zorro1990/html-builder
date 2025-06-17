@@ -21,3 +21,21 @@ body {
 .grid > section {
     padding: 10px;
 }
+
+/* 密码验证界面样式 */
+.auth-form {
+    max-width: 400px;
+    margin: 0 auto;
+    padding: 20px;
+    text-align: center;
+}
+
+.auth-form input {
+    margin-bottom: 15px;
+}
+
+.error-message {
+    color: #e74c3c;
+    margin-top: 10px;
+    min-height: 20px;
+}
