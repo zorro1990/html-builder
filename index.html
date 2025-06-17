@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>StaticHTML Publisher</title>
+    <!-- 引入 Pico.css -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@1/css/pico.min.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <main class="container">
+        <header>
+            <h1>StaticHTML Publisher</h1>
+            <p>粘贴您的 HTML 代码，实时预览并一键发布。</p>
+        </header>
+
+        <div class="grid">
+            <section>
+                <h2>输入 HTML</h2>
+                <textarea id="htmlInput" rows="15" placeholder="在这里粘贴您的 HTML 代码..."></textarea>
+            </section>
+            <section>
+                <h2>实时预览</h2>
+                <iframe id="previewFrame" sandbox="allow-scripts allow-same-origin" title="Preview"></iframe>
+                <!-- 注意: sandbox 属性对于安全至关重要，但可能会限制某些脚本功能，如顶级导航或弹窗。根据需要调整。 -->
+                <!-- 'allow-same-origin' 允许 iframe 内容访问其来源的资源，如果 HTML 内部有相对路径的资源，可能需要。 -->
+                <!-- 'allow-scripts' 允许执行脚本。 -->
+            </section>
+        </div>
+
+        <footer>
+            <button id="publishBtn">发布</button>
+            <div id="publishedLinkContainer" style="margin-top: 1em; display: none;">
+                <p>发布成功！访问链接：<a id="publishedLink" href="#" target="_blank"></a></p>
+                <input type="text" id="publishedLinkInput" readonly>
+            </div>
+        </footer>
+
+    </main>
+    <!-- 引入 DOMPurify -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/dompurify/3.0.6/purify.min.js"></script> 
+    <script src="script.js"></script>
+</body>
+</html>

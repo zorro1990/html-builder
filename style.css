@@ -1,0 +1,23 @@
+body {
+    padding-bottom: 50px; /* 防止页脚内容被遮挡 */
+}
+
+#htmlInput {
+    width: 100%;
+    box-sizing: border-box;
+    font-family: monospace;
+}
+
+#previewFrame {
+    width: 100%;
+    height: 400px; /* 根据需要调整高度 */
+    border: 1px solid #ccc;
+    background-color: #fff;
+}
+
+/* Pico.css grid system uses 'grid' class on parent */
+/* For a 2-column layout, children are direct descendants */
+/* We can add more specific styling if needed */
+.grid > section {
+    padding: 10px;
+}
