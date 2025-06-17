@@ -57,8 +57,16 @@ export default async function handler(req, res) {
       });
       
     } catch (githubError) {
+      console.error('GitHub API error:', JSON.stringify({
+        status: githubError.status,
+        message: githubError.message,
+        path: filePath,
+        owner: repoOwner,
+        repo: repoName
+      }));
+      
       if (githubError.status === 404) {
-        return res.status(404).json({ error: '内容不存在' });
+        return res.status(404).json({ error: '内容不存在', details: filePath });
       }
       throw githubError;
     }
