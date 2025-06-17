@@ -12,10 +12,7 @@ export default function ViewContent() {
   useEffect(() => {
     if (!id) return;
     
-    // 使用相对路径，而不是硬编码的URL
-    const apiUrl = `https://html-builder-m79lcra9f-zorros-projects-c272bad2.vercel.app/api/view-html?id=${id}`;
-    
-    // 改为
+    // 只使用相对路径
     const apiUrl = `/api/view-html?id=${id}`;
     
     fetch(apiUrl)
