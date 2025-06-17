@@ -17,9 +17,9 @@ export default async function handler(req, res) {
   }
   
   try {
-    const { htmlContent } = req.body;
+    const { html } = req.body;
     
-    if (!htmlContent) {
+    if (!html) {
       return res.status(400).json({ error: 'HTML内容不能为空' });
     }
     
@@ -44,7 +44,7 @@ export default async function handler(req, res) {
     const filePath = `data/${contentId}.json`;
     const fileContent = JSON.stringify({
       id: contentId,
-      content: htmlContent,
+      content: html,
       createdAt: new Date().toISOString()
     });
     
@@ -62,12 +62,12 @@ export default async function handler(req, res) {
     return res.status(200).json({
       success: true,
       contentId,
-      viewUrl,
+      url: viewUrl,  // 确保返回的字段名与前端期望的一致
       message: '发布成功'
     });
     
   } catch (error) {
     console.error('Publish error:', error);
-    return res.status(500).json({ error: '发布失败' });
+    return res.status(500).json({ error: '发布失败', message: error.message });
   }
 }
