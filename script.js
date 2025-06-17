@@ -47,7 +47,7 @@ document.addEventListener('DOMContentLoaded', function() {
         verifyBtn.textContent = '验证中...';
         authMessage.textContent = '';
         
-        fetch('/api/verify-password', {
+        fetch('https://html-builder-blond.vercel.app/api/verify-password', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
